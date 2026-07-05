@@ -18,6 +18,7 @@ import 'package:weather_app/features/weather/presentation/widgets/dashboard_erro
 import 'package:weather_app/features/weather/presentation/widgets/dashboard_header.dart';
 import 'package:weather_app/features/weather/presentation/widgets/dashboard_shimmer_view.dart';
 import 'package:weather_app/features/weather/presentation/widgets/dashboard_weather_content.dart';
+import 'package:weather_app/features/weather/presentation/widgets/seven_day_forecast_link.dart';
 import 'package:weather_app/features/weather/presentation/widgets/severe_weather_alert_banner.dart';
 
 class WeatherDashboardPage extends StatefulWidget {
@@ -130,6 +131,7 @@ class _LoadedDashboardBody extends StatelessWidget {
           DashboardHeader(bundle: bundle),
           const SizedBox(height: AppSpacing.gapLg),
           DashboardWeatherContent(bundle: bundle),
+          SevenDayForecastLink(bundle: bundle),
           if (kDebugMode && !debugSheetOpen) const SizedBox(height: 72),
         ],
       ),

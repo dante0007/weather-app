@@ -32,6 +32,11 @@
       "killSwitch": false,
       "rolloutPercentage": 100,
       "variant": "compact"
+    },
+    "seven_day_forecast": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 0
     }
   }
 }

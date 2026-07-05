@@ -47,6 +47,7 @@ class ConfigDebugPanel extends StatefulWidget {
     'hourly_forecast',
     'wind_speed_card',
     'severe_weather_alert',
+    'seven_day_forecast',
     'layout_variant',
   ];
 

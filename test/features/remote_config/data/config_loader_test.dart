@@ -19,6 +19,10 @@ void main() {
       expect(config.description, 'Conservative rollout');
       expect(config.flags['severe_weather_alert']?.killSwitch, isTrue);
       expect(config.flags['layout_variant']?.rollout.variant, 'compact');
+      expect(
+        config.flags['seven_day_forecast']?.rollout.rolloutPercentage,
+        0,
+      );
     });
 
     test('config_b loads and maps without error', () async {
@@ -30,6 +34,10 @@ void main() {
       expect(config.flags['wind_speed_card']?.rollout.rolloutPercentage, 80);
       expect(config.flags['severe_weather_alert']?.killSwitch, isFalse);
       expect(config.flags['layout_variant']?.rollout.variant, 'detailed');
+      expect(
+        config.flags['seven_day_forecast']?.rollout.rolloutPercentage,
+        100,
+      );
     });
 
     test('registered asset paths resolve', () async {

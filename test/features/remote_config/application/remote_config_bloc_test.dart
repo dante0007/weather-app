@@ -59,6 +59,7 @@ final RemoteConfig configA = RemoteConfig(
       'layout_variant',
       variant: 'compact',
     ),
+    'seven_day_forecast': _flag('seven_day_forecast', rolloutPercentage: 0),
   },
 );
 
@@ -72,6 +73,7 @@ final RemoteConfig configB = RemoteConfig(
     'wind_speed_card': _flag('wind_speed_card', rolloutPercentage: 80),
     'severe_weather_alert': _flag('severe_weather_alert'),
     'layout_variant': _flag('layout_variant', variant: 'detailed'),
+    'seven_day_forecast': _flag('seven_day_forecast'),
   },
 );
 

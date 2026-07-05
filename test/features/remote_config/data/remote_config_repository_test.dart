@@ -29,6 +29,10 @@ void main() {
         30,
       );
       expect(config.flags['layout_variant']?.rollout.variant, 'compact');
+      expect(
+        config.flags['seven_day_forecast']?.rollout.rolloutPercentage,
+        0,
+      );
     });
 
     test(
@@ -51,6 +55,10 @@ void main() {
           100,
         );
         expect(config.flags['layout_variant']?.rollout.variant, 'detailed');
+        expect(
+          config.flags['seven_day_forecast']?.rollout.rolloutPercentage,
+          100,
+        );
       },
     );
 

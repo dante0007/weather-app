@@ -192,6 +192,12 @@ abstract final class StaticMockData {
         killSwitch: false,
         rollout: RolloutRule(rolloutPercentage: 100, variant: 'compact'),
       ),
+      'seven_day_forecast': FeatureFlag(
+        key: 'seven_day_forecast',
+        enabled: true,
+        killSwitch: false,
+        rollout: RolloutRule(rolloutPercentage: 0),
+      ),
     },
   );
 
@@ -235,6 +241,12 @@ abstract final class StaticMockData {
         enabled: true,
         killSwitch: false,
         rollout: RolloutRule(rolloutPercentage: 100, variant: 'detailed'),
+      ),
+      'seven_day_forecast': FeatureFlag(
+        key: 'seven_day_forecast',
+        enabled: true,
+        killSwitch: false,
+        rollout: RolloutRule(rolloutPercentage: 100),
       ),
     },
   );

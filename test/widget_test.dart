@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:weather_app/app.dart';
 import 'package:weather_app/core/di/injection_container.dart';
+import 'package:weather_app/core/router/app_router.dart';
 import 'package:weather_app/features/remote_config/application/bloc/remote_config_bloc.dart';
 import 'package:weather_app/features/remote_config/application/bloc/remote_config_event.dart';
 import 'package:weather_app/features/weather/domain/entities/air_quality.dart';
@@ -50,6 +51,7 @@ void main() {
   });
 
   setUp(() async {
+    AppRouter.resetForTesting();
     await sl.reset(dispose: true);
     configureDependencies();
 
