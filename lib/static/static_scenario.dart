@@ -126,11 +126,11 @@ abstract final class StaticScenarioHolder {
       StaticScenario.shimmerLoading => StaticScenarioData(
           scenario: scenario,
           config: StaticMockData.configA,
-          userId: AppConstants.defaultUserId,
+          userId: StaticMockData.userIdConfigACompact,
           weatherState: const WeatherState.loading(),
           evaluations: StaticFlagEvaluator.evaluateAll(
             StaticMockData.configA,
-            AppConstants.defaultUserId,
+            StaticMockData.userIdConfigACompact,
           ),
         ),
     };

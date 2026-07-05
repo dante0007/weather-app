@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:weather_app/design/design_index_page.dart';
 import 'package:weather_app/design/gallery_page.dart';
 
 abstract final class AppRouteNames {
@@ -9,6 +10,7 @@ abstract final class AppRouteNames {
   static const String configViewer = 'config-viewer';
   static const String forecast = 'forecast';
   static const String designGallery = 'design-gallery';
+  static const String designIndex = 'design-index';
 }
 
 class AppRouter {
@@ -35,7 +37,7 @@ class AppRouter {
           child: _ForecastPlaceholderPage(),
         ),
       ),
-      if (kDebugMode)
+      if (kDebugMode) ...[
         GoRoute(
           path: '/design-gallery',
           name: AppRouteNames.designGallery,
@@ -43,6 +45,14 @@ class AppRouter {
             child: DesignGalleryPage(),
           ),
         ),
+        GoRoute(
+          path: '/design-index',
+          name: AppRouteNames.designIndex,
+          pageBuilder: (context, state) => const MaterialPage(
+            child: DesignIndexPage(),
+          ),
+        ),
+      ],
     ],
   );
 }
