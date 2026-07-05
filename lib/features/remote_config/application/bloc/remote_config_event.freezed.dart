@@ -55,14 +55,15 @@ extension RemoteConfigEventPatterns on RemoteConfigEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RemoteConfigStarted value)?  started,TResult Function( RemoteConfigConfigSwitched value)?  configSwitched,TResult Function( RemoteConfigUserIdChanged value)?  userIdChanged,TResult Function( RemoteConfigKillSwitchToggled value)?  killSwitchToggled,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RemoteConfigStarted value)?  started,TResult Function( RemoteConfigConfigSwitched value)?  configSwitched,TResult Function( RemoteConfigUserIdChanged value)?  userIdChanged,TResult Function( RemoteConfigKillSwitchToggled value)?  killSwitchToggled,TResult Function( RemoteConfigConfigStreamUpdated value)?  configStreamUpdated,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RemoteConfigStarted() when started != null:
 return started(_that);case RemoteConfigConfigSwitched() when configSwitched != null:
 return configSwitched(_that);case RemoteConfigUserIdChanged() when userIdChanged != null:
 return userIdChanged(_that);case RemoteConfigKillSwitchToggled() when killSwitchToggled != null:
-return killSwitchToggled(_that);case _:
+return killSwitchToggled(_that);case RemoteConfigConfigStreamUpdated() when configStreamUpdated != null:
+return configStreamUpdated(_that);case _:
   return orElse();
 
 }
@@ -80,14 +81,15 @@ return killSwitchToggled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RemoteConfigStarted value)  started,required TResult Function( RemoteConfigConfigSwitched value)  configSwitched,required TResult Function( RemoteConfigUserIdChanged value)  userIdChanged,required TResult Function( RemoteConfigKillSwitchToggled value)  killSwitchToggled,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RemoteConfigStarted value)  started,required TResult Function( RemoteConfigConfigSwitched value)  configSwitched,required TResult Function( RemoteConfigUserIdChanged value)  userIdChanged,required TResult Function( RemoteConfigKillSwitchToggled value)  killSwitchToggled,required TResult Function( RemoteConfigConfigStreamUpdated value)  configStreamUpdated,}){
 final _that = this;
 switch (_that) {
 case RemoteConfigStarted():
 return started(_that);case RemoteConfigConfigSwitched():
 return configSwitched(_that);case RemoteConfigUserIdChanged():
 return userIdChanged(_that);case RemoteConfigKillSwitchToggled():
-return killSwitchToggled(_that);}
+return killSwitchToggled(_that);case RemoteConfigConfigStreamUpdated():
+return configStreamUpdated(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -101,14 +103,15 @@ return killSwitchToggled(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RemoteConfigStarted value)?  started,TResult? Function( RemoteConfigConfigSwitched value)?  configSwitched,TResult? Function( RemoteConfigUserIdChanged value)?  userIdChanged,TResult? Function( RemoteConfigKillSwitchToggled value)?  killSwitchToggled,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RemoteConfigStarted value)?  started,TResult? Function( RemoteConfigConfigSwitched value)?  configSwitched,TResult? Function( RemoteConfigUserIdChanged value)?  userIdChanged,TResult? Function( RemoteConfigKillSwitchToggled value)?  killSwitchToggled,TResult? Function( RemoteConfigConfigStreamUpdated value)?  configStreamUpdated,}){
 final _that = this;
 switch (_that) {
 case RemoteConfigStarted() when started != null:
 return started(_that);case RemoteConfigConfigSwitched() when configSwitched != null:
 return configSwitched(_that);case RemoteConfigUserIdChanged() when userIdChanged != null:
 return userIdChanged(_that);case RemoteConfigKillSwitchToggled() when killSwitchToggled != null:
-return killSwitchToggled(_that);case _:
+return killSwitchToggled(_that);case RemoteConfigConfigStreamUpdated() when configStreamUpdated != null:
+return configStreamUpdated(_that);case _:
   return null;
 
 }
@@ -125,13 +128,14 @@ return killSwitchToggled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( String configId)?  configSwitched,TResult Function( String userId)?  userIdChanged,TResult Function( String flagKey,  bool killed)?  killSwitchToggled,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( String configId)?  configSwitched,TResult Function( String userId)?  userIdChanged,TResult Function( String flagKey,  bool killed)?  killSwitchToggled,TResult Function( RemoteConfig config)?  configStreamUpdated,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RemoteConfigStarted() when started != null:
 return started();case RemoteConfigConfigSwitched() when configSwitched != null:
 return configSwitched(_that.configId);case RemoteConfigUserIdChanged() when userIdChanged != null:
 return userIdChanged(_that.userId);case RemoteConfigKillSwitchToggled() when killSwitchToggled != null:
-return killSwitchToggled(_that.flagKey,_that.killed);case _:
+return killSwitchToggled(_that.flagKey,_that.killed);case RemoteConfigConfigStreamUpdated() when configStreamUpdated != null:
+return configStreamUpdated(_that.config);case _:
   return orElse();
 
 }
@@ -149,13 +153,14 @@ return killSwitchToggled(_that.flagKey,_that.killed);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( String configId)  configSwitched,required TResult Function( String userId)  userIdChanged,required TResult Function( String flagKey,  bool killed)  killSwitchToggled,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( String configId)  configSwitched,required TResult Function( String userId)  userIdChanged,required TResult Function( String flagKey,  bool killed)  killSwitchToggled,required TResult Function( RemoteConfig config)  configStreamUpdated,}) {final _that = this;
 switch (_that) {
 case RemoteConfigStarted():
 return started();case RemoteConfigConfigSwitched():
 return configSwitched(_that.configId);case RemoteConfigUserIdChanged():
 return userIdChanged(_that.userId);case RemoteConfigKillSwitchToggled():
-return killSwitchToggled(_that.flagKey,_that.killed);}
+return killSwitchToggled(_that.flagKey,_that.killed);case RemoteConfigConfigStreamUpdated():
+return configStreamUpdated(_that.config);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -169,13 +174,14 @@ return killSwitchToggled(_that.flagKey,_that.killed);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( String configId)?  configSwitched,TResult? Function( String userId)?  userIdChanged,TResult? Function( String flagKey,  bool killed)?  killSwitchToggled,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( String configId)?  configSwitched,TResult? Function( String userId)?  userIdChanged,TResult? Function( String flagKey,  bool killed)?  killSwitchToggled,TResult? Function( RemoteConfig config)?  configStreamUpdated,}) {final _that = this;
 switch (_that) {
 case RemoteConfigStarted() when started != null:
 return started();case RemoteConfigConfigSwitched() when configSwitched != null:
 return configSwitched(_that.configId);case RemoteConfigUserIdChanged() when userIdChanged != null:
 return userIdChanged(_that.userId);case RemoteConfigKillSwitchToggled() when killSwitchToggled != null:
-return killSwitchToggled(_that.flagKey,_that.killed);case _:
+return killSwitchToggled(_that.flagKey,_that.killed);case RemoteConfigConfigStreamUpdated() when configStreamUpdated != null:
+return configStreamUpdated(_that.config);case _:
   return null;
 
 }
@@ -413,6 +419,81 @@ as bool,
 }
 
 
+}
+
+/// @nodoc
+
+
+class RemoteConfigConfigStreamUpdated implements RemoteConfigEvent {
+  const RemoteConfigConfigStreamUpdated(this.config);
+  
+
+ final  RemoteConfig config;
+
+/// Create a copy of RemoteConfigEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RemoteConfigConfigStreamUpdatedCopyWith<RemoteConfigConfigStreamUpdated> get copyWith => _$RemoteConfigConfigStreamUpdatedCopyWithImpl<RemoteConfigConfigStreamUpdated>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoteConfigConfigStreamUpdated&&(identical(other.config, config) || other.config == config));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,config);
+
+@override
+String toString() {
+  return 'RemoteConfigEvent.configStreamUpdated(config: $config)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RemoteConfigConfigStreamUpdatedCopyWith<$Res> implements $RemoteConfigEventCopyWith<$Res> {
+  factory $RemoteConfigConfigStreamUpdatedCopyWith(RemoteConfigConfigStreamUpdated value, $Res Function(RemoteConfigConfigStreamUpdated) _then) = _$RemoteConfigConfigStreamUpdatedCopyWithImpl;
+@useResult
+$Res call({
+ RemoteConfig config
+});
+
+
+$RemoteConfigCopyWith<$Res> get config;
+
+}
+/// @nodoc
+class _$RemoteConfigConfigStreamUpdatedCopyWithImpl<$Res>
+    implements $RemoteConfigConfigStreamUpdatedCopyWith<$Res> {
+  _$RemoteConfigConfigStreamUpdatedCopyWithImpl(this._self, this._then);
+
+  final RemoteConfigConfigStreamUpdated _self;
+  final $Res Function(RemoteConfigConfigStreamUpdated) _then;
+
+/// Create a copy of RemoteConfigEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? config = null,}) {
+  return _then(RemoteConfigConfigStreamUpdated(
+null == config ? _self.config : config // ignore: cast_nullable_to_non_nullable
+as RemoteConfig,
+  ));
+}
+
+/// Create a copy of RemoteConfigEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RemoteConfigCopyWith<$Res> get config {
+  
+  return $RemoteConfigCopyWith<$Res>(_self.config, (value) {
+    return _then(_self.copyWith(config: value));
+  });
+}
 }
 
 // dart format on

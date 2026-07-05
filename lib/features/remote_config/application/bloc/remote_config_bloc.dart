@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/core/usecase/usecase.dart';
 import 'package:weather_app/features/remote_config/application/bloc/remote_config_event.dart';
 import 'package:weather_app/features/remote_config/application/bloc/remote_config_state.dart';
+import 'package:weather_app/features/remote_config/domain/entities/remote_config.dart';
 import 'package:weather_app/features/remote_config/domain/repositories/remote_config_repository.dart';
 import 'package:weather_app/features/remote_config/domain/services/flag_evaluator.dart';
 import 'package:weather_app/features/remote_config/domain/usecases/get_remote_config.dart';
@@ -24,12 +27,15 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     on<RemoteConfigConfigSwitched>(_onConfigSwitched);
     on<RemoteConfigUserIdChanged>(_onUserIdChanged);
     on<RemoteConfigKillSwitchToggled>(_onKillSwitchToggled);
+    on<RemoteConfigConfigStreamUpdated>(_onConfigStreamUpdated);
   }
 
   final RemoteConfigRepository _repository;
   final GetRemoteConfig _getRemoteConfig;
   final SwitchConfig _switchConfig;
   final ToggleKillSwitch _toggleKillSwitch;
+
+  StreamSubscription<RemoteConfig>? _configSubscription;
 
   Future<void> _onStarted(
     RemoteConfigStarted event,
@@ -50,10 +56,17 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
       return;
     }
 
-    await emit.onEach(
-      _repository.watchConfig(),
-      onData: (config) => state.copyWith(config: config, failure: null),
+    await _configSubscription?.cancel();
+    _configSubscription = _repository.watchConfig().listen(
+      (config) => add(RemoteConfigEvent.configStreamUpdated(config)),
     );
+  }
+
+  void _onConfigStreamUpdated(
+    RemoteConfigConfigStreamUpdated event,
+    Emitter<RemoteConfigState> emit,
+  ) {
+    emit(state.copyWith(config: event.config, failure: null));
   }
 
   Future<void> _onConfigSwitched(
@@ -91,5 +104,11 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
       (failure) => emit(state.copyWith(failure: failure)),
       (_) => emit(state.copyWith(failure: null)),
     );
+  }
+
+  @override
+  Future<void> close() async {
+    await _configSubscription?.cancel();
+    return super.close();
   }
 }

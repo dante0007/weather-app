@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:weather_app/features/remote_config/domain/entities/remote_config.dart';
 
 part 'remote_config_event.freezed.dart';
 
@@ -16,4 +17,8 @@ sealed class RemoteConfigEvent with _$RemoteConfigEvent {
     String flagKey,
     bool killed,
   ) = RemoteConfigKillSwitchToggled;
+
+  /// Dispatched by the bloc when [RemoteConfigRepository.watchConfig] emits.
+  const factory RemoteConfigEvent.configStreamUpdated(RemoteConfig config) =
+      RemoteConfigConfigStreamUpdated;
 }
