@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:weather_app/core/error/failures.dart';
 import 'package:weather_app/features/remote_config/data/datasources/remote_config_local_source.dart';
 import 'package:weather_app/features/remote_config/data/repositories/remote_config_repository_impl.dart';

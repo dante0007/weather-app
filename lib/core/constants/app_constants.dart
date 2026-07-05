@@ -10,5 +10,6 @@ abstract final class AppConstants {
 
   static const String defaultConfigId = 'config_a';
 
+  static const String defaultUserId = 'user_42';
   static const String defaultMockUserId = 'mock-user-001';
 }
