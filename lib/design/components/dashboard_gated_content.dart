@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:weather_app/core/theme/app_spacing.dart';
-import 'package:weather_app/design/components/cards/air_quality_card.dart';
-import 'package:weather_app/design/components/cards/hourly_forecast_card.dart';
-import 'package:weather_app/design/components/cards/uv_index_card.dart';
-import 'package:weather_app/design/components/cards/wind_speed_card.dart';
-import 'package:weather_app/design/components/other_cities.dart';
+import 'package:weather_app/features/weather/presentation/widgets/air_quality_card.dart';
+import 'package:weather_app/features/weather/presentation/widgets/hourly_forecast_card.dart';
+import 'package:weather_app/features/weather/presentation/widgets/other_cities.dart';
+import 'package:weather_app/features/weather/presentation/widgets/uv_index_card.dart';
+import 'package:weather_app/features/weather/presentation/widgets/wind_speed_card.dart';
 import 'package:weather_app/design/components/stat_pill.dart';
 import 'package:weather_app/design/static_feature_gate.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';

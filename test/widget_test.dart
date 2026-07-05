@@ -14,10 +14,10 @@ void main() {
     sl<RemoteConfigBloc>().add(const RemoteConfigEvent.started());
   });
 
-  testWidgets('shows dashboard placeholder', (WidgetTester tester) async {
+  testWidgets('shows weather dashboard', (WidgetTester tester) async {
     await tester.pumpWidget(const WeatherApp());
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(find.text('Dashboard'), findsOneWidget);
+    expect(find.text('New York'), findsOneWidget);
   });
 }

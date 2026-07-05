@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:weather_app/design/design_index_page.dart';
 import 'package:weather_app/design/gallery_page.dart';
-import 'package:weather_app/design/screens/config_viewer_screen.dart';
 import 'package:weather_app/design/screens/seven_day_forecast_screen.dart';
-import 'package:weather_app/static/static_scenario.dart';
+import 'package:weather_app/features/remote_config/presentation/pages/config_viewer_page.dart';
+import 'package:weather_app/features/weather/presentation/pages/weather_dashboard_page.dart';
 
 abstract final class AppRouteNames {
   static const String dashboard = 'dashboard';
@@ -23,16 +23,14 @@ class AppRouter {
         path: '/',
         name: AppRouteNames.dashboard,
         pageBuilder: (context, state) => const MaterialPage(
-          child: _DashboardPlaceholderPage(),
+          child: WeatherDashboardPage(),
         ),
       ),
       GoRoute(
         path: '/config-viewer',
         name: AppRouteNames.configViewer,
         pageBuilder: (context, state) => const MaterialPage(
-          child: ConfigViewerScreen(
-            scenario: StaticScenario.configViewerA,
-          ),
+          child: ConfigViewerPage(),
         ),
       ),
       GoRoute(
@@ -60,15 +58,4 @@ class AppRouter {
       ],
     ],
   );
-}
-
-class _DashboardPlaceholderPage extends StatelessWidget {
-  const _DashboardPlaceholderPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Dashboard')),
-    );
-  }
 }

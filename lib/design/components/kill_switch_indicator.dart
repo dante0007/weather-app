@@ -8,16 +8,18 @@ class KillSwitchIndicator extends StatelessWidget {
     required this.isKilled,
     super.key,
     this.size = 10,
+    this.onTap,
   });
 
   final bool isKilled;
   final double size;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final color = isKilled ? AppColors.accentAlert : AppColors.accentGreen;
 
-    return Container(
+    final dot = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
@@ -30,6 +32,19 @@ class KillSwitchIndicator extends StatelessWidget {
             spreadRadius: 1,
           ),
         ],
+      ),
+    );
+
+    if (onTap == null) {
+      return dot;
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: dot,
       ),
     );
   }

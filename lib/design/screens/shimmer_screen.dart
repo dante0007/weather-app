@@ -4,7 +4,7 @@ import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
 import 'package:weather_app/design/components/app_background.dart';
-import 'package:weather_app/design/components/dashboard_header.dart';
+import 'package:weather_app/features/weather/presentation/widgets/dashboard_header.dart';
 import 'package:weather_app/design/components/shimmer_box.dart';
 import 'package:weather_app/design/components/stat_pill.dart';
 import 'package:weather_app/design/static_feature_gate.dart';
