@@ -15,6 +15,7 @@ enum StaticScenario {
   configBDetailedUser91,
   killSwitchBefore,
   killSwitchAfter,
+  debugFabCollapsed,
   debugPanelA,
   debugPanelB,
   debugPanelUserChanged,
@@ -86,6 +87,11 @@ abstract final class StaticScenarioHolder {
           scenario: scenario,
           config: StaticMockData.configBAlertKilled,
           userId: StaticMockData.userIdConfigBFull,
+        ),
+      StaticScenario.debugFabCollapsed => _dashboard(
+          scenario: scenario,
+          config: StaticMockData.configA,
+          userId: AppConstants.defaultUserId,
         ),
       StaticScenario.debugPanelA => _dashboard(
           scenario: scenario,
