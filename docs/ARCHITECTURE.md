@@ -1,60 +1,105 @@
-# Architecture
+# Architecture Sketch
 
-Weather Flags is a Flutter app that gates weather UI behind on-device feature-flag evaluation. Configuration is loaded from bundled JSON assets (with a repository seam ready for a remote source), and weather data comes from the Open-Meteo APIs.
+Weather Flags gates a Flutter weather dashboard with an **on-device feature-flag platform**. Config is loaded from bundled JSON (swappable to a remote Retrofit endpoint); weather from Open-Meteo; flags evaluated locally by a pure-Dart `FlagEvaluator`.
 
-## Layered structure
+## Layer diagram
 
 ![Clean architecture layers](architecture-layers.png)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  presentation/   pages, widgets, FeatureGate, GoRouter    │
-└────────────────────────────┬────────────────────────────────┘
-                             │ reads Bloc state
-┌────────────────────────────▼────────────────────────────────┐
-│  application/      WeatherBloc, RemoteConfigBloc, use cases   │
-└────────────────────────────┬────────────────────────────────┘
-                             │ calls
-┌────────────────────────────▼────────────────────────────────┐
-│  domain/           entities, FlagEvaluator, repo interfaces   │
-└────────────────────────────▲────────────────────────────────┘
-                             │ implements
-┌────────────────────────────┴────────────────────────────────┐
-│  data/             DTOs, mappers, Retrofit, local JSON      │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│  PRESENTATION                                                            │
+│  WeatherDashboardPage, FeatureGate, ConfigDebugPanel, GoRouter           │
+│  lib/features/*/presentation/  +  lib/core/widgets/                      │
+└───────────────────────────────┬──────────────────────────────────────────┘
+                                │ reads Bloc state / dispatches events
+┌───────────────────────────────▼──────────────────────────────────────────┐
+│  APPLICATION                                                             │
+│  RemoteConfigBloc, WeatherBloc  →  use cases (GetRemoteConfig, etc.)     │
+└───────────────────────────────┬──────────────────────────────────────────┘
+                                │ calls
+┌───────────────────────────────▼──────────────────────────────────────────┐
+│  DOMAIN                                                                  │
+│  RemoteConfig, FeatureFlag, FlagEvaluation, WeatherBundle                │
+│  FlagEvaluator (pure Dart)  |  repository interfaces                     │
+└───────────────────────────────▲──────────────────────────────────────────┘
+                                │ implements
+┌───────────────────────────────┴──────────────────────────────────────────┐
+│  DATA                                                                      │
+│  RemoteConfigRepositoryImpl (in-memory + broadcast stream)                 │
+│  WeatherRepositoryImpl (Retrofit → Open-Meteo)                             │
+│  DTOs, mappers, assets/config/*.json                                       │
+└────────────────────────────────────────────────────────────────────────────┘
+
+         core/  —  GetIt DI, GoRouter, theme, Failure, location
 ```
 
 **Dependency rule:** `presentation → application → domain ← data`. Domain has no Flutter, DTO, or Bloc imports.
 
 | Layer | Responsibility |
 |-------|----------------|
-| **Presentation** | Renders UI; `FeatureGate` / `FlagVariant` read `RemoteConfigBloc` evaluations. |
-| **Application** | Orchestrates use cases; holds user id, active config, and weather fetch state. |
-| **Domain** | Pure flag evaluation (`FlagEvaluator`), entities, repository contracts. |
-| **Data** | Loads `assets/config/*.json`, calls Open-Meteo, maps DTOs to entities. |
+| **Presentation** | UI; `FeatureGate` / `FlagVariant` read `RemoteConfigBloc` evaluations |
+| **Application** | Blocs orchestrate use cases; propagate `Either<Failure, T>` |
+| **Domain** | Entities, `FlagEvaluator`, repository contracts |
+| **Data** | JSON assets, Retrofit clients, repository implementations |
 
-Shared infrastructure lives in `lib/core/` (GetIt DI, GoRouter, theme, `Failure` types, shared widgets in `core/widgets/`, device location in `core/location/`).
+## Flag evaluation pipeline
 
-## Flag evaluation order
+```
+  Config JSON  ──►  RemoteConfigRepository  ──►  broadcast stream
+                              │
+                              ▼
+                    RemoteConfigBloc (userId + active config)
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+       FeatureGate widget              GoRouter redirect
+              │                               │
+              └───────────►  FlagEvaluator.evaluate(flag, userId)
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    ▼                 ▼                 ▼
+              kill-switch?      enabled?      bucket < rollout%?
+              (strict first)    (second)            (third)
+                    │                 │                 │
+                    └─────────────────┴─────────────────┘
+                                      ▼
+                            FlagEvaluation
+                     (result, bucket, reason, variant)
+```
 
-For each flag, `FlagEvaluator.evaluate(flag, userId)` applies checks in this order:
+### Single user + flag (sequence)
 
-1. **Kill-switch** — if `killSwitch` is true, result is `false` (reason: killed).
-2. **Enabled** — if `enabled` is false, result is `false` (reason: disabled).
-3. **Rollout bucket** — compute `bucket = fnv1a32("$userId:$flagKey") % 100`; include when `bucket < rolloutPercentage`.
-4. **Variant** — if the flag defines a `variant` string, it is carried through on the `FlagEvaluation` regardless of inclusion (used by `layout_variant`).
+```
+userId="user_87", flagKey="air_quality_card", config_a (30% rollout)
 
-Route-level gates (e.g. `/forecast`) use the same evaluations via a GoRouter `redirect` that reads `RemoteConfigBloc.state.isEnabled(flagKey)`.
+1. hash input  =  "user_87:air_quality_card"
+2. FNV-1a 32-bit  →  integer hash
+3. bucket       =  hash % 100   (e.g. 17)
+4. killSwitch?  →  no  →  continue
+5. enabled?     →  yes →  continue
+6. 17 < 30?     →  yes →  result = true, reason = "bucket 17 < 30%, included"
+7. FeatureGate renders child; evaluation table shows bucket 17
+```
 
-## Determinism
-
-Rollout bucketing uses **FNV-1a 32-bit** over UTF-8 `"$userId:$flagKey"`, reduced modulo 100. The same user and flag always land in the same bucket across app restarts and devices — no server round-trip, no randomness at evaluation time. Unit tests assert determinism (1 000 repeated calls) and distribution sanity (10 000 synthetic users at 50% rollout).
+Same inputs always produce the same bucket (tested: 1 000 repeated calls). No network at evaluation time.
 
 ## Key decisions
 
-- **On-device evaluation** — flags are evaluated locally from the active config plus a client-held user id; no network call per widget rebuild.
-- **Mocked config with a real seam** — configs ship as JSON assets today, but `RemoteConfigRepository` is an interface; swapping in a remote fetcher does not touch presentation or `FlagEvaluator`.
-- **Deterministic hashing** — FNV-1a bucketing keeps rollouts stable and testable without a backend assignment service.
-- **In-place UI + repository swap** — presentation widgets live in `features/*/presentation/` and consume real blocs. Dev-time sample weather is provided by `FakeWeatherRepository` at the data boundary (`test/fixtures/weather_bundle_fixture.dart`). Shared primitives live in `core/widgets/`.
+1. **On-device evaluation** — explainability and offline resilience; no per-widget network call. Trade-off: no instant global override without a config push (mitigated by kill-switch + config stream).
 
-See also [CONVENTIONS.md](CONVENTIONS.md) for coding standards.
+2. **Mocked config with a real Retrofit seam** — `assets/config/*.json` today; `RemoteConfigRemoteSource` is a one-line DI swap to a real endpoint. Presentation and `FlagEvaluator` unchanged.
+
+3. **Deterministic FNV-1a bucketing** — `hash(userId:flagKey) % 100`, not random. Stable across restarts and devices; testable without a backend assignment service. Per-flag salt via `flagKey` avoids one bucket deciding all flags.
+
+4. **Strict kill-switch precedence** — evaluated before `enabled` and rollout %. Prevents a mis-set rollout from exposing a flag that ops has killed (incident guardrail).
+
+5. **`FeatureGate` as the single gating primitive** — adding a feature is a config entry + one widget wrap (+ optional route redirect). Inverse cleanup path when a flag graduates.
+
+6. **Four-layer Clean Architecture** — `application/` holds Blocs separate from `presentation/` so domain rules and orchestration stay testable without widget trees.
+
+7. **Fake repository at the DI boundary** — `FakeWeatherRepository` returns canned `WeatherBundle` fixtures so UI is runnable before Open-Meteo; swap to `WeatherRepositoryImpl` in GetIt without touching widgets.
+
+8. **`Either<Failure, T>`** — repositories return `fpdart` Either; failures are typed (`NetworkFailure`, `locationPermissionDenied`, etc.) and mapped in the data layer, not thrown across boundaries.
+
+See [CONVENTIONS.md](CONVENTIONS.md) for package and naming standards.
