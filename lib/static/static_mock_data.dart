@@ -4,7 +4,6 @@ import 'package:weather_app/features/remote_config/domain/entities/rollout_rule.
 import 'package:weather_app/features/weather/domain/entities/air_quality.dart';
 import 'package:weather_app/features/weather/domain/entities/current_weather.dart';
 import 'package:weather_app/features/weather/domain/entities/daily_forecast.dart';
-import 'package:weather_app/features/weather/domain/entities/geo_city.dart';
 import 'package:weather_app/features/weather/domain/entities/hourly_forecast.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_condition.dart';
@@ -41,12 +40,6 @@ abstract final class StaticMockData {
     type: WeatherConditionType.clear,
     label: 'Sunny',
     iconKey: 'clear',
-  );
-
-  static const WeatherCondition _snowy = WeatherCondition(
-    type: WeatherConditionType.snow,
-    label: 'Snowy',
-    iconKey: 'snow',
   );
 
   static const WeatherCondition _rainy = WeatherCondition(
@@ -254,77 +247,4 @@ abstract final class StaticMockData {
               .copyWith(killSwitch: true),
         },
       );
-
-  static const List<GeoCity> otherCities = [
-    GeoCity(name: 'California', country: 'United States', lat: 36.78, lon: -119.42),
-    GeoCity(name: 'Las Vegas', country: 'United States', lat: 36.17, lon: -115.14),
-    GeoCity(name: 'London', country: 'United Kingdom', lat: 51.51, lon: -0.13),
-  ];
-
-  /// Display weather for [otherCities] — same [WeatherBundle] type as the dashboard.
-  static List<WeatherBundle> get otherCityBundles => [
-        WeatherBundle(
-          cityName: 'California',
-          current: const CurrentWeather(
-            temperature: 9,
-            feelsLike: 8,
-            condition: _sunny,
-            humidity: 35,
-            precipitationProbability: 5,
-            windSpeed: 6,
-            windDirection: 270,
-            uvIndex: 2,
-            isDay: true,
-          ),
-          hourly: const HourlyForecast(slots: []),
-          daily: const DailyForecast(days: []),
-          airQuality: const AirQuality(
-            aqi: 25,
-            category: AirQualityCategory.good,
-            dominantPollutant: 'PM2.5',
-          ),
-        ),
-        WeatherBundle(
-          cityName: 'Las Vegas',
-          current: const CurrentWeather(
-            temperature: 9,
-            feelsLike: 7,
-            condition: _snowy,
-            humidity: 40,
-            precipitationProbability: 55,
-            windSpeed: 11,
-            windDirection: 340,
-            uvIndex: 1,
-            isDay: true,
-          ),
-          hourly: const HourlyForecast(slots: []),
-          daily: const DailyForecast(days: []),
-          airQuality: const AirQuality(
-            aqi: 38,
-            category: AirQualityCategory.good,
-            dominantPollutant: 'PM2.5',
-          ),
-        ),
-        WeatherBundle(
-          cityName: 'London',
-          current: const CurrentWeather(
-            temperature: 6,
-            feelsLike: 4,
-            condition: _rainy,
-            humidity: 78,
-            precipitationProbability: 70,
-            windSpeed: 14,
-            windDirection: 225,
-            uvIndex: 1,
-            isDay: true,
-          ),
-          hourly: const HourlyForecast(slots: []),
-          daily: const DailyForecast(days: []),
-          airQuality: const AirQuality(
-            aqi: 55,
-            category: AirQualityCategory.moderate,
-            dominantPollutant: 'NO2',
-          ),
-        ),
-      ];
 }

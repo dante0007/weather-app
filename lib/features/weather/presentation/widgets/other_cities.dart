@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_radii.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
 import 'package:weather_app/design/components/glass_card.dart';
-import 'package:weather_app/design/components/weather_icon.dart';
-import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
-import 'package:weather_app/static/static_mock_data.dart';
+import 'package:weather_app/features/weather/application/bloc/weather_bloc.dart';
+import 'package:weather_app/features/weather/application/bloc/weather_event.dart';
+import 'package:weather_app/features/weather/domain/entities/geo_city.dart';
+import 'package:weather_app/features/weather/presentation/constants/preset_cities.dart';
 
-/// Horizontal California / Las Vegas / London row (design dashboard).
 class OtherCities extends StatelessWidget {
-  const OtherCities({super.key});
+  const OtherCities({
+    this.currentCityName,
+    super.key,
+  });
+
+  final String? currentCityName;
 
   @override
   Widget build(BuildContext context) {
+    final cities = WeatherPresetCities.others
+        .where((city) => city.name != currentCityName)
+        .toList();
+
+    if (cities.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,7 +44,11 @@ class OtherCities extends StatelessWidget {
                 borderRadius: AppRadii.pill,
                 border: Border.all(color: AppColors.glassBorder),
               ),
-              child: const Icon(Icons.add, size: 16, color: AppColors.textSecondary),
+              child: const Icon(
+                Icons.add,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
             ),
           ],
         ),
@@ -39,11 +57,16 @@ class OtherCities extends StatelessWidget {
           height: 118,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: StaticMockData.otherCityBundles.length,
+            itemCount: cities.length,
             separatorBuilder: (context, index) =>
                 const SizedBox(width: AppSpacing.gap),
             itemBuilder: (context, index) {
-              return _CityCard(bundle: StaticMockData.otherCityBundles[index]);
+              return _CityCard(
+                city: cities[index],
+                onTap: () => context.read<WeatherBloc>().add(
+                      WeatherEvent.cityChanged(cities[index]),
+                    ),
+              );
             },
           ),
         ),
@@ -53,9 +76,13 @@ class OtherCities extends StatelessWidget {
 }
 
 class _CityCard extends StatelessWidget {
-  const _CityCard({required this.bundle});
+  const _CityCard({
+    required this.city,
+    required this.onTap,
+  });
 
-  final WeatherBundle bundle;
+  final GeoCity city;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -63,26 +90,37 @@ class _CityCard extends StatelessWidget {
       width: 108,
       child: GlassCard(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(bundle.cityName, style: AppTypography.subtitle),
-            Text(
-              bundle.current.condition.label,
-              style: AppTypography.caption,
-            ),
-            const Spacer(),
-            Row(
-              children: [
-                WeatherIcon(condition: bundle.current.condition, size: 28),
-                const Spacer(),
-                Text(
-                  '${bundle.current.temperature.round()}°',
-                  style: AppTypography.temp.copyWith(fontSize: 22),
-                ),
-              ],
-            ),
-          ],
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadii.card,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(city.name, style: AppTypography.subtitle),
+              Text(
+                city.country,
+                style: AppTypography.caption,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_city_outlined,
+                    size: 28,
+                    color: AppColors.textSecondary,
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    Icons.chevron_right,
+                    size: 18,
+                    color: AppColors.textMuted,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

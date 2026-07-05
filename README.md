@@ -21,6 +21,8 @@ fvm dart run build_runner build --delete-conflicting-outputs
 fvm flutter run
 ```
 
+In **debug** builds, the static design walkthrough remains at `/design-index` and `/design-gallery` (not linked from the live dashboard).
+
 ## Architecture
 
 Feature-first layout under `lib/features/<feature>/`:

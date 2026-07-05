@@ -87,7 +87,8 @@ class DashboardWeatherContent extends StatelessWidget {
                 child: HourlyForecastCard(bundle: bundle, detailed: detailed),
               ),
             ),
-            if (!detailed) const OtherCities(),
+            if (!detailed)
+              OtherCities(currentCityName: bundle.cityName),
           ],
         );
       },
