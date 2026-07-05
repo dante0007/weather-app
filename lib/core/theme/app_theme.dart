@@ -1,103 +1,79 @@
 import 'package:flutter/material.dart';
 
+import 'package:weather_app/core/theme/app_colors.dart';
+import 'package:weather_app/core/theme/app_radii.dart';
+import 'package:weather_app/core/theme/app_typography.dart';
+
+export 'package:weather_app/core/theme/app_colors.dart';
+export 'package:weather_app/core/theme/app_radii.dart';
+export 'package:weather_app/core/theme/app_spacing.dart';
+export 'package:weather_app/core/theme/app_typography.dart';
+
 abstract final class AppTheme {
-  static const Color background = Color(0xFF0D0D0F);
+  // Back-compat aliases used by existing widgets.
+  static const Color background = AppColors.backgroundTop;
+  static const Color glassSurface = AppColors.glassSurface;
+  static const Color glassSurfaceElevated = AppColors.glassSurfaceElevated;
+  static const Color glassBorder = AppColors.glassBorder;
+  static const Color accentAmber = AppColors.accentAmber;
+  static const Color accentBlue = AppColors.accentBlue;
+  static const Color accentGreen = AppColors.accentGreen;
+  static const Color accentAlert = AppColors.accentAlert;
+  static const Color textPrimary = AppColors.textPrimary;
+  static const Color textSecondary = AppColors.textSecondary;
+  static const Color textMuted = AppColors.textMuted;
 
-  static const Color glassSurface = Color(0x1AFFFFFF);
-  static const Color glassSurfaceElevated = Color(0x26FFFFFF);
-  static const Color glassBorder = Color(0x33FFFFFF);
-
-  static const Color accentAmber = Color(0xFFF5A623);
-  static const Color accentBlue = Color(0xFF4A9EF7);
-  static const Color accentGreen = Color(0xFF4CAF50);
-  static const Color accentAlert = Color(0xFFE53935);
-
-  static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xB3FFFFFF);
-  static const Color textMuted = Color(0x80FFFFFF);
-
-  static const TextStyle hero = TextStyle(
-    fontSize: 64,
-    fontWeight: FontWeight.w300,
-    height: 1.1,
-    letterSpacing: -1.5,
-    color: textPrimary,
-  );
-
-  static const TextStyle card = TextStyle(
-    fontSize: 32,
-    fontWeight: FontWeight.w500,
-    height: 1.2,
-    color: textPrimary,
-  );
-
-  static const TextStyle title = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    height: 1.3,
-    color: textPrimary,
-  );
-
-  static const TextStyle subtitle = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: textSecondary,
-  );
-
-  static const TextStyle caption = TextStyle(
-    fontSize: 11,
-    fontWeight: FontWeight.w400,
-    height: 1.3,
-    letterSpacing: 0.2,
-    color: textMuted,
-  );
+  static const TextStyle hero = AppTypography.hero;
+  static const TextStyle card = AppTypography.temp;
+  static const TextStyle title = AppTypography.title;
+  static const TextStyle subtitle = AppTypography.subtitle;
+  static const TextStyle caption = AppTypography.caption;
 
   static ThemeData get darkTheme {
     final colorScheme = ColorScheme.dark(
-      surface: background,
-      primary: accentBlue,
-      secondary: accentAmber,
-      tertiary: accentGreen,
-      error: accentAlert,
-      onSurface: textPrimary,
-      onPrimary: textPrimary,
-      onSecondary: background,
-      onError: textPrimary,
+      surface: AppColors.backgroundTop,
+      primary: AppColors.accentBlue,
+      secondary: AppColors.accentAmber,
+      tertiary: AppColors.accentGreen,
+      error: AppColors.accentAlert,
+      onSurface: AppColors.textPrimary,
+      onPrimary: AppColors.textPrimary,
+      onSecondary: AppColors.backgroundTop,
+      onError: AppColors.textPrimary,
     );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: background,
+      scaffoldBackgroundColor: AppColors.backgroundTop,
       colorScheme: colorScheme,
       appBarTheme: const AppBarTheme(
-        backgroundColor: background,
-        foregroundColor: textPrimary,
+        backgroundColor: Colors.transparent,
+        foregroundColor: AppColors.textPrimary,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: title,
+        titleTextStyle: AppTypography.title,
       ),
       cardTheme: CardThemeData(
-        color: glassSurface,
+        color: AppColors.glassSurface,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: glassBorder),
+          borderRadius: AppRadii.card,
+          side: const BorderSide(color: AppColors.glassBorder),
         ),
       ),
       textTheme: const TextTheme(
-        displayLarge: hero,
-        headlineMedium: card,
-        titleMedium: title,
-        bodyMedium: subtitle,
-        labelSmall: caption,
+        displayLarge: AppTypography.hero,
+        headlineMedium: AppTypography.temp,
+        titleMedium: AppTypography.title,
+        bodyMedium: AppTypography.subtitle,
+        labelSmall: AppTypography.caption,
       ),
-      dividerColor: glassBorder,
-      iconTheme: const IconThemeData(color: textSecondary),
+      dividerColor: AppColors.glassBorder,
+      iconTheme: const IconThemeData(color: AppColors.textSecondary),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: accentBlue,
-        foregroundColor: textPrimary,
+        backgroundColor: AppColors.accentBlue,
+        foregroundColor: AppColors.textPrimary,
       ),
     );
   }
