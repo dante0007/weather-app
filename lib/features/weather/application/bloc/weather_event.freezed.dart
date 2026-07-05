@@ -55,13 +55,15 @@ extension WeatherEventPatterns on WeatherEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WeatherLoadRequested value)?  loadRequested,TResult Function( WeatherCityChanged value)?  cityChanged,TResult Function( WeatherRefreshRequested value)?  refreshRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WeatherDeviceLocationRequested value)?  deviceLocationRequested,TResult Function( WeatherLoadRequested value)?  loadRequested,TResult Function( WeatherCityChanged value)?  cityChanged,TResult Function( WeatherRefreshRequested value)?  refreshRequested,TResult Function( WeatherTopCitiesRequested value)?  topCitiesRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case WeatherLoadRequested() when loadRequested != null:
+case WeatherDeviceLocationRequested() when deviceLocationRequested != null:
+return deviceLocationRequested(_that);case WeatherLoadRequested() when loadRequested != null:
 return loadRequested(_that);case WeatherCityChanged() when cityChanged != null:
 return cityChanged(_that);case WeatherRefreshRequested() when refreshRequested != null:
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case WeatherTopCitiesRequested() when topCitiesRequested != null:
+return topCitiesRequested(_that);case _:
   return orElse();
 
 }
@@ -79,13 +81,15 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WeatherLoadRequested value)  loadRequested,required TResult Function( WeatherCityChanged value)  cityChanged,required TResult Function( WeatherRefreshRequested value)  refreshRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WeatherDeviceLocationRequested value)  deviceLocationRequested,required TResult Function( WeatherLoadRequested value)  loadRequested,required TResult Function( WeatherCityChanged value)  cityChanged,required TResult Function( WeatherRefreshRequested value)  refreshRequested,required TResult Function( WeatherTopCitiesRequested value)  topCitiesRequested,}){
 final _that = this;
 switch (_that) {
-case WeatherLoadRequested():
+case WeatherDeviceLocationRequested():
+return deviceLocationRequested(_that);case WeatherLoadRequested():
 return loadRequested(_that);case WeatherCityChanged():
 return cityChanged(_that);case WeatherRefreshRequested():
-return refreshRequested(_that);}
+return refreshRequested(_that);case WeatherTopCitiesRequested():
+return topCitiesRequested(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -99,13 +103,15 @@ return refreshRequested(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WeatherLoadRequested value)?  loadRequested,TResult? Function( WeatherCityChanged value)?  cityChanged,TResult? Function( WeatherRefreshRequested value)?  refreshRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WeatherDeviceLocationRequested value)?  deviceLocationRequested,TResult? Function( WeatherLoadRequested value)?  loadRequested,TResult? Function( WeatherCityChanged value)?  cityChanged,TResult? Function( WeatherRefreshRequested value)?  refreshRequested,TResult? Function( WeatherTopCitiesRequested value)?  topCitiesRequested,}){
 final _that = this;
 switch (_that) {
-case WeatherLoadRequested() when loadRequested != null:
+case WeatherDeviceLocationRequested() when deviceLocationRequested != null:
+return deviceLocationRequested(_that);case WeatherLoadRequested() when loadRequested != null:
 return loadRequested(_that);case WeatherCityChanged() when cityChanged != null:
 return cityChanged(_that);case WeatherRefreshRequested() when refreshRequested != null:
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case WeatherTopCitiesRequested() when topCitiesRequested != null:
+return topCitiesRequested(_that);case _:
   return null;
 
 }
@@ -122,12 +128,14 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( double lat,  double lon,  String cityName)?  loadRequested,TResult Function( GeoCity city)?  cityChanged,TResult Function()?  refreshRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  deviceLocationRequested,TResult Function( double lat,  double lon,  String cityName)?  loadRequested,TResult Function( GeoCity city)?  cityChanged,TResult Function()?  refreshRequested,TResult Function( String countryCode,  String? excludeCityName)?  topCitiesRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case WeatherLoadRequested() when loadRequested != null:
+case WeatherDeviceLocationRequested() when deviceLocationRequested != null:
+return deviceLocationRequested();case WeatherLoadRequested() when loadRequested != null:
 return loadRequested(_that.lat,_that.lon,_that.cityName);case WeatherCityChanged() when cityChanged != null:
 return cityChanged(_that.city);case WeatherRefreshRequested() when refreshRequested != null:
-return refreshRequested();case _:
+return refreshRequested();case WeatherTopCitiesRequested() when topCitiesRequested != null:
+return topCitiesRequested(_that.countryCode,_that.excludeCityName);case _:
   return orElse();
 
 }
@@ -145,12 +153,14 @@ return refreshRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( double lat,  double lon,  String cityName)  loadRequested,required TResult Function( GeoCity city)  cityChanged,required TResult Function()  refreshRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  deviceLocationRequested,required TResult Function( double lat,  double lon,  String cityName)  loadRequested,required TResult Function( GeoCity city)  cityChanged,required TResult Function()  refreshRequested,required TResult Function( String countryCode,  String? excludeCityName)  topCitiesRequested,}) {final _that = this;
 switch (_that) {
-case WeatherLoadRequested():
+case WeatherDeviceLocationRequested():
+return deviceLocationRequested();case WeatherLoadRequested():
 return loadRequested(_that.lat,_that.lon,_that.cityName);case WeatherCityChanged():
 return cityChanged(_that.city);case WeatherRefreshRequested():
-return refreshRequested();}
+return refreshRequested();case WeatherTopCitiesRequested():
+return topCitiesRequested(_that.countryCode,_that.excludeCityName);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -164,18 +174,52 @@ return refreshRequested();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( double lat,  double lon,  String cityName)?  loadRequested,TResult? Function( GeoCity city)?  cityChanged,TResult? Function()?  refreshRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  deviceLocationRequested,TResult? Function( double lat,  double lon,  String cityName)?  loadRequested,TResult? Function( GeoCity city)?  cityChanged,TResult? Function()?  refreshRequested,TResult? Function( String countryCode,  String? excludeCityName)?  topCitiesRequested,}) {final _that = this;
 switch (_that) {
-case WeatherLoadRequested() when loadRequested != null:
+case WeatherDeviceLocationRequested() when deviceLocationRequested != null:
+return deviceLocationRequested();case WeatherLoadRequested() when loadRequested != null:
 return loadRequested(_that.lat,_that.lon,_that.cityName);case WeatherCityChanged() when cityChanged != null:
 return cityChanged(_that.city);case WeatherRefreshRequested() when refreshRequested != null:
-return refreshRequested();case _:
+return refreshRequested();case WeatherTopCitiesRequested() when topCitiesRequested != null:
+return topCitiesRequested(_that.countryCode,_that.excludeCityName);case _:
   return null;
 
 }
 }
 
 }
+
+/// @nodoc
+
+
+class WeatherDeviceLocationRequested implements WeatherEvent {
+  const WeatherDeviceLocationRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WeatherDeviceLocationRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'WeatherEvent.deviceLocationRequested()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 
@@ -353,5 +397,73 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class WeatherTopCitiesRequested implements WeatherEvent {
+  const WeatherTopCitiesRequested({required this.countryCode, this.excludeCityName});
+  
+
+ final  String countryCode;
+ final  String? excludeCityName;
+
+/// Create a copy of WeatherEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$WeatherTopCitiesRequestedCopyWith<WeatherTopCitiesRequested> get copyWith => _$WeatherTopCitiesRequestedCopyWithImpl<WeatherTopCitiesRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WeatherTopCitiesRequested&&(identical(other.countryCode, countryCode) || other.countryCode == countryCode)&&(identical(other.excludeCityName, excludeCityName) || other.excludeCityName == excludeCityName));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,countryCode,excludeCityName);
+
+@override
+String toString() {
+  return 'WeatherEvent.topCitiesRequested(countryCode: $countryCode, excludeCityName: $excludeCityName)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $WeatherTopCitiesRequestedCopyWith<$Res> implements $WeatherEventCopyWith<$Res> {
+  factory $WeatherTopCitiesRequestedCopyWith(WeatherTopCitiesRequested value, $Res Function(WeatherTopCitiesRequested) _then) = _$WeatherTopCitiesRequestedCopyWithImpl;
+@useResult
+$Res call({
+ String countryCode, String? excludeCityName
+});
+
+
+
+
+}
+/// @nodoc
+class _$WeatherTopCitiesRequestedCopyWithImpl<$Res>
+    implements $WeatherTopCitiesRequestedCopyWith<$Res> {
+  _$WeatherTopCitiesRequestedCopyWithImpl(this._self, this._then);
+
+  final WeatherTopCitiesRequested _self;
+  final $Res Function(WeatherTopCitiesRequested) _then;
+
+/// Create a copy of WeatherEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? countryCode = null,Object? excludeCityName = freezed,}) {
+  return _then(WeatherTopCitiesRequested(
+countryCode: null == countryCode ? _self.countryCode : countryCode // ignore: cast_nullable_to_non_nullable
+as String,excludeCityName: freezed == excludeCityName ? _self.excludeCityName : excludeCityName // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
 
 // dart format on

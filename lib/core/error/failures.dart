@@ -13,4 +13,8 @@ sealed class Failure with _$Failure {
   const factory Failure.configParseFailure(String message) = ConfigParseFailure;
 
   const factory Failure.unknownFailure(String message) = UnknownFailure;
+
+  const factory Failure.locationPermissionDenied() = LocationPermissionDenied;
+
+  const factory Failure.locationUnavailable() = LocationUnavailable;
 }

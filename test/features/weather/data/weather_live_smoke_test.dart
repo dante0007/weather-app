@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:weather_app/core/constants/app_constants.dart';
 import 'package:weather_app/features/weather/data/datasources/weather_remote_source.dart';
 import 'package:weather_app/features/weather/data/repositories/weather_repository_impl.dart';
 
@@ -25,17 +26,17 @@ void main() {
     );
   });
 
-  test('fetches a populated WeatherBundle for New York', () async {
+  test('fetches a populated WeatherBundle for fallback coordinates', () async {
     final result = await repository.getWeather(
-      lat: 40.71,
-      lon: -74.01,
-      cityName: 'New York',
+      lat: AppConstants.fallbackLat,
+      lon: AppConstants.fallbackLon,
+      cityName: AppConstants.fallbackCityName,
     );
 
     await result.fold(
       (failure) => fail('expected Right but got $failure'),
       (bundle) async {
-        expect(bundle.cityName, 'New York');
+        expect(bundle.cityName, AppConstants.fallbackCityName);
         expect(bundle.current.temperature, isA<double>());
         expect(bundle.hourly.slots, isNotEmpty);
         expect(bundle.daily.days.length, 7);

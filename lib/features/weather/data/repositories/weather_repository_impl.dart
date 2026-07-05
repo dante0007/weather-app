@@ -2,10 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 
 import 'package:weather_app/core/error/failures.dart';
+import 'package:weather_app/features/weather/data/datasources/top_cities_catalog.dart';
 import 'package:weather_app/features/weather/data/datasources/weather_remote_source.dart';
 import 'package:weather_app/features/weather/data/mappers/weather_mapper.dart';
 import 'package:weather_app/features/weather/data/models/air_quality_response_dto.dart';
 import 'package:weather_app/features/weather/data/models/forecast_response_dto.dart';
+import 'package:weather_app/features/weather/data/models/geocoding_response_dto.dart';
 import 'package:weather_app/features/weather/domain/entities/geo_city.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 import 'package:weather_app/features/weather/domain/repositories/weather_repository.dart';
@@ -60,6 +62,76 @@ class WeatherRepositoryImpl implements WeatherRepository {
     } catch (error) {
       return Left(Failure.unknownFailure(error.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, List<GeoCity>>> topCitiesForCountry(
+    String countryCode,
+  ) async {
+    try {
+      final normalized = countryCode.toUpperCase();
+      final cityNames = TopCitiesCatalog.cityNamesFor(normalized);
+      final filterByCountry = TopCitiesCatalog.isCuratedCountry(normalized);
+
+      final geocoded = await Future.wait(
+        cityNames.map(
+          (name) => _geocodeCity(
+            name,
+            filterByCountry ? normalized : null,
+          ),
+        ),
+      );
+
+      final cities = geocoded.whereType<GeoCity>().toList();
+      if (cities.isEmpty) {
+        return const Right([]);
+      }
+
+      return Right(cities);
+    } on DioException catch (error) {
+      return Left(_mapDioException(error));
+    } catch (error) {
+      return Left(Failure.unknownFailure(error.toString()));
+    }
+  }
+
+  Future<GeoCity?> _geocodeCity(String name, String? countryCode) async {
+    final response = await _geocodingClient.search(name: name, count: 5);
+    final results = response.results;
+    if (results == null || results.isEmpty) {
+      return null;
+    }
+
+    if (countryCode == null) {
+      final match = results.first;
+      return GeoCity(
+        name: match.name,
+        country: match.country,
+        lat: match.latitude,
+        lon: match.longitude,
+      );
+    }
+
+    GeocodingResultDto? match;
+    for (final result in results) {
+      if (result.countryCode?.toUpperCase() == countryCode) {
+        match = result;
+        break;
+      }
+    }
+    match ??= results.first;
+
+    if (match.countryCode != null &&
+        match.countryCode!.toUpperCase() != countryCode) {
+      return null;
+    }
+
+    return GeoCity(
+      name: match.name,
+      country: match.country,
+      lat: match.latitude,
+      lon: match.longitude,
+    );
   }
 
   Failure _mapDioException(DioException error) {

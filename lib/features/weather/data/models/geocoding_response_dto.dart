@@ -21,6 +21,7 @@ class GeocodingResultDto {
     required this.country,
     required this.latitude,
     required this.longitude,
+    this.countryCode,
   });
 
   factory GeocodingResultDto.fromJson(Map<String, dynamic> json) =>
@@ -28,6 +29,10 @@ class GeocodingResultDto {
 
   final String name;
   final String country;
+
+  @JsonKey(name: 'country_code')
+  final String? countryCode;
+
   final double latitude;
   final double longitude;
 

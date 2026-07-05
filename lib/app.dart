@@ -14,6 +14,7 @@ class WeatherApp extends StatelessWidget {
     return BlocProvider<RemoteConfigBloc>.value(
       value: sl<RemoteConfigBloc>(),
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         title: 'Weather Flags',
         theme: AppTheme.darkTheme,
         routerConfig: AppRouter.router,

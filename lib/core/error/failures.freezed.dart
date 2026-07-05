@@ -55,7 +55,7 @@ extension FailurePatterns on Failure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  serverFailure,TResult Function( NetworkFailure value)?  networkFailure,TResult Function( CacheFailure value)?  cacheFailure,TResult Function( ConfigParseFailure value)?  configParseFailure,TResult Function( UnknownFailure value)?  unknownFailure,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  serverFailure,TResult Function( NetworkFailure value)?  networkFailure,TResult Function( CacheFailure value)?  cacheFailure,TResult Function( ConfigParseFailure value)?  configParseFailure,TResult Function( UnknownFailure value)?  unknownFailure,TResult Function( LocationPermissionDenied value)?  locationPermissionDenied,TResult Function( LocationUnavailable value)?  locationUnavailable,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when serverFailure != null:
@@ -63,7 +63,9 @@ return serverFailure(_that);case NetworkFailure() when networkFailure != null:
 return networkFailure(_that);case CacheFailure() when cacheFailure != null:
 return cacheFailure(_that);case ConfigParseFailure() when configParseFailure != null:
 return configParseFailure(_that);case UnknownFailure() when unknownFailure != null:
-return unknownFailure(_that);case _:
+return unknownFailure(_that);case LocationPermissionDenied() when locationPermissionDenied != null:
+return locationPermissionDenied(_that);case LocationUnavailable() when locationUnavailable != null:
+return locationUnavailable(_that);case _:
   return orElse();
 
 }
@@ -81,7 +83,7 @@ return unknownFailure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  serverFailure,required TResult Function( NetworkFailure value)  networkFailure,required TResult Function( CacheFailure value)  cacheFailure,required TResult Function( ConfigParseFailure value)  configParseFailure,required TResult Function( UnknownFailure value)  unknownFailure,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  serverFailure,required TResult Function( NetworkFailure value)  networkFailure,required TResult Function( CacheFailure value)  cacheFailure,required TResult Function( ConfigParseFailure value)  configParseFailure,required TResult Function( UnknownFailure value)  unknownFailure,required TResult Function( LocationPermissionDenied value)  locationPermissionDenied,required TResult Function( LocationUnavailable value)  locationUnavailable,}){
 final _that = this;
 switch (_that) {
 case ServerFailure():
@@ -89,7 +91,9 @@ return serverFailure(_that);case NetworkFailure():
 return networkFailure(_that);case CacheFailure():
 return cacheFailure(_that);case ConfigParseFailure():
 return configParseFailure(_that);case UnknownFailure():
-return unknownFailure(_that);}
+return unknownFailure(_that);case LocationPermissionDenied():
+return locationPermissionDenied(_that);case LocationUnavailable():
+return locationUnavailable(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -103,7 +107,7 @@ return unknownFailure(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  serverFailure,TResult? Function( NetworkFailure value)?  networkFailure,TResult? Function( CacheFailure value)?  cacheFailure,TResult? Function( ConfigParseFailure value)?  configParseFailure,TResult? Function( UnknownFailure value)?  unknownFailure,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  serverFailure,TResult? Function( NetworkFailure value)?  networkFailure,TResult? Function( CacheFailure value)?  cacheFailure,TResult? Function( ConfigParseFailure value)?  configParseFailure,TResult? Function( UnknownFailure value)?  unknownFailure,TResult? Function( LocationPermissionDenied value)?  locationPermissionDenied,TResult? Function( LocationUnavailable value)?  locationUnavailable,}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when serverFailure != null:
@@ -111,7 +115,9 @@ return serverFailure(_that);case NetworkFailure() when networkFailure != null:
 return networkFailure(_that);case CacheFailure() when cacheFailure != null:
 return cacheFailure(_that);case ConfigParseFailure() when configParseFailure != null:
 return configParseFailure(_that);case UnknownFailure() when unknownFailure != null:
-return unknownFailure(_that);case _:
+return unknownFailure(_that);case LocationPermissionDenied() when locationPermissionDenied != null:
+return locationPermissionDenied(_that);case LocationUnavailable() when locationUnavailable != null:
+return locationUnavailable(_that);case _:
   return null;
 
 }
@@ -128,14 +134,16 @@ return unknownFailure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message)?  serverFailure,TResult Function()?  networkFailure,TResult Function()?  cacheFailure,TResult Function( String message)?  configParseFailure,TResult Function( String message)?  unknownFailure,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message)?  serverFailure,TResult Function()?  networkFailure,TResult Function()?  cacheFailure,TResult Function( String message)?  configParseFailure,TResult Function( String message)?  unknownFailure,TResult Function()?  locationPermissionDenied,TResult Function()?  locationUnavailable,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerFailure() when serverFailure != null:
 return serverFailure(_that.message);case NetworkFailure() when networkFailure != null:
 return networkFailure();case CacheFailure() when cacheFailure != null:
 return cacheFailure();case ConfigParseFailure() when configParseFailure != null:
 return configParseFailure(_that.message);case UnknownFailure() when unknownFailure != null:
-return unknownFailure(_that.message);case _:
+return unknownFailure(_that.message);case LocationPermissionDenied() when locationPermissionDenied != null:
+return locationPermissionDenied();case LocationUnavailable() when locationUnavailable != null:
+return locationUnavailable();case _:
   return orElse();
 
 }
@@ -153,14 +161,16 @@ return unknownFailure(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message)  serverFailure,required TResult Function()  networkFailure,required TResult Function()  cacheFailure,required TResult Function( String message)  configParseFailure,required TResult Function( String message)  unknownFailure,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message)  serverFailure,required TResult Function()  networkFailure,required TResult Function()  cacheFailure,required TResult Function( String message)  configParseFailure,required TResult Function( String message)  unknownFailure,required TResult Function()  locationPermissionDenied,required TResult Function()  locationUnavailable,}) {final _that = this;
 switch (_that) {
 case ServerFailure():
 return serverFailure(_that.message);case NetworkFailure():
 return networkFailure();case CacheFailure():
 return cacheFailure();case ConfigParseFailure():
 return configParseFailure(_that.message);case UnknownFailure():
-return unknownFailure(_that.message);}
+return unknownFailure(_that.message);case LocationPermissionDenied():
+return locationPermissionDenied();case LocationUnavailable():
+return locationUnavailable();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -174,14 +184,16 @@ return unknownFailure(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message)?  serverFailure,TResult? Function()?  networkFailure,TResult? Function()?  cacheFailure,TResult? Function( String message)?  configParseFailure,TResult? Function( String message)?  unknownFailure,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message)?  serverFailure,TResult? Function()?  networkFailure,TResult? Function()?  cacheFailure,TResult? Function( String message)?  configParseFailure,TResult? Function( String message)?  unknownFailure,TResult? Function()?  locationPermissionDenied,TResult? Function()?  locationUnavailable,}) {final _that = this;
 switch (_that) {
 case ServerFailure() when serverFailure != null:
 return serverFailure(_that.message);case NetworkFailure() when networkFailure != null:
 return networkFailure();case CacheFailure() when cacheFailure != null:
 return cacheFailure();case ConfigParseFailure() when configParseFailure != null:
 return configParseFailure(_that.message);case UnknownFailure() when unknownFailure != null:
-return unknownFailure(_that.message);case _:
+return unknownFailure(_that.message);case LocationPermissionDenied() when locationPermissionDenied != null:
+return locationPermissionDenied();case LocationUnavailable() when locationUnavailable != null:
+return locationUnavailable();case _:
   return null;
 
 }
@@ -450,5 +462,69 @@ as String,
 
 
 }
+
+/// @nodoc
+
+
+class LocationPermissionDenied implements Failure {
+  const LocationPermissionDenied();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocationPermissionDenied);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'Failure.locationPermissionDenied()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class LocationUnavailable implements Failure {
+  const LocationUnavailable();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocationUnavailable);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'Failure.locationUnavailable()';
+}
+
+
+}
+
+
+
 
 // dart format on

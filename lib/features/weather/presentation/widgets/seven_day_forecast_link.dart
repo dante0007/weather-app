@@ -5,7 +5,7 @@ import 'package:weather_app/core/router/app_router.dart';
 import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/glass_card.dart';
+import 'package:weather_app/core/widgets/glass_card.dart';
 import 'package:weather_app/features/remote_config/presentation/widgets/feature_gate.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 

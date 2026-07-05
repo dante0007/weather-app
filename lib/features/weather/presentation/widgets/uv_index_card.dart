@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/circular_metric_gauge.dart';
-import 'package:weather_app/design/components/glass_card.dart';
-import 'package:weather_app/design/components/status_badge.dart';
+import 'package:weather_app/core/widgets/circular_metric_gauge.dart';
+import 'package:weather_app/core/widgets/glass_card.dart';
+import 'package:weather_app/core/widgets/status_badge.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 
 class UvIndexCard extends StatelessWidget {

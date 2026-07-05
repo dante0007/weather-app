@@ -4,7 +4,7 @@ import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_radii.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/glass_card.dart';
+import 'package:weather_app/core/widgets/glass_card.dart';
 
 /// Quick-stat pill for precip / humidity / wind rows.
 class StatPill extends StatelessWidget {

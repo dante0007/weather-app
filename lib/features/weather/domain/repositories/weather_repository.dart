@@ -12,4 +12,6 @@ abstract class WeatherRepository {
   });
 
   Future<Either<Failure, List<GeoCity>>> searchCity(String query);
+
+  Future<Either<Failure, List<GeoCity>>> topCitiesForCountry(String countryCode);
 }

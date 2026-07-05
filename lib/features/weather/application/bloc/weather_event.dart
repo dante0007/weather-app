@@ -6,6 +6,9 @@ part 'weather_event.freezed.dart';
 
 @freezed
 sealed class WeatherEvent with _$WeatherEvent {
+  const factory WeatherEvent.deviceLocationRequested() =
+      WeatherDeviceLocationRequested;
+
   const factory WeatherEvent.loadRequested({
     required double lat,
     required double lon,
@@ -15,4 +18,9 @@ sealed class WeatherEvent with _$WeatherEvent {
   const factory WeatherEvent.cityChanged(GeoCity city) = WeatherCityChanged;
 
   const factory WeatherEvent.refreshRequested() = WeatherRefreshRequested;
+
+  const factory WeatherEvent.topCitiesRequested({
+    required String countryCode,
+    String? excludeCityName,
+  }) = WeatherTopCitiesRequested;
 }

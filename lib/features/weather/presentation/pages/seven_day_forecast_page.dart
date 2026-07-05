@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/app_background.dart';
-import 'package:weather_app/design/components/glass_card.dart';
-import 'package:weather_app/design/components/weather_icon.dart';
+import 'package:weather_app/core/widgets/app_background.dart';
+import 'package:weather_app/core/widgets/glass_card.dart';
+import 'package:weather_app/core/widgets/weather_icon.dart';
 import 'package:weather_app/features/weather/domain/entities/daily_forecast.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 

@@ -24,12 +24,14 @@ GeocodingResultDto _$GeocodingResultDtoFromJson(Map<String, dynamic> json) =>
       country: json['country'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
+      countryCode: json['country_code'] as String?,
     );
 
 Map<String, dynamic> _$GeocodingResultDtoToJson(GeocodingResultDto instance) =>
     <String, dynamic>{
       'name': instance.name,
       'country': instance.country,
+      'country_code': instance.countryCode,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
     };

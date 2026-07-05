@@ -5,6 +5,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:weather_app/app.dart';
 import 'package:weather_app/core/di/injection_container.dart';
 import 'package:weather_app/core/router/app_router.dart';
+import 'package:weather_app/core/location/domain/entities/user_location.dart';
+import 'package:weather_app/core/location/domain/usecases/get_current_location.dart';
 import 'package:weather_app/features/remote_config/application/bloc/remote_config_bloc.dart';
 import 'package:weather_app/features/remote_config/application/bloc/remote_config_event.dart';
 import 'package:weather_app/features/weather/domain/entities/air_quality.dart';
@@ -14,13 +16,20 @@ import 'package:weather_app/features/weather/domain/entities/hourly_forecast.dar
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_condition.dart';
 import 'package:weather_app/features/weather/domain/usecases/get_weather.dart';
+import 'package:weather_app/features/weather/domain/usecases/top_cities_for_country.dart';
 
 class MockGetWeather extends Mock implements GetWeather {}
+
+class MockGetCurrentLocation extends Mock implements GetCurrentLocation {}
+
+class MockTopCitiesForCountry extends Mock implements TopCitiesForCountry {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late MockGetWeather mockGetWeather;
+  late MockGetCurrentLocation mockGetCurrentLocation;
+  late MockTopCitiesForCountry mockTopCitiesForCountry;
 
   final bundle = WeatherBundle(
     cityName: 'New York',
@@ -44,9 +53,20 @@ void main() {
     ),
   );
 
+  const deviceLocation = UserLocation(
+    latitude: 40.71,
+    longitude: -74.01,
+    cityName: 'New York',
+    countryCode: 'US',
+    countryName: 'United States',
+  );
+
   setUpAll(() {
     registerFallbackValue(
       const GetWeatherParams(lat: 0, lon: 0, cityName: 'fallback'),
+    );
+    registerFallbackValue(
+      const TopCitiesForCountryParams(countryCode: 'US'),
     );
   });
 
@@ -56,10 +76,22 @@ void main() {
     configureDependencies();
 
     mockGetWeather = MockGetWeather();
+    mockGetCurrentLocation = MockGetCurrentLocation();
+    mockTopCitiesForCountry = MockTopCitiesForCountry();
     when(() => mockGetWeather(any())).thenAnswer((_) async => Right(bundle));
+    when(() => mockGetCurrentLocation()).thenAnswer(
+      (_) async => const Right(deviceLocation),
+    );
+    when(() => mockTopCitiesForCountry(any())).thenAnswer(
+      (_) async => const Right([]),
+    );
 
     await sl.unregister<GetWeather>();
     sl.registerFactory<GetWeather>(() => mockGetWeather);
+    await sl.unregister<GetCurrentLocation>();
+    sl.registerFactory<GetCurrentLocation>(() => mockGetCurrentLocation);
+    await sl.unregister<TopCitiesForCountry>();
+    sl.registerFactory<TopCitiesForCountry>(() => mockTopCitiesForCountry);
 
     sl<RemoteConfigBloc>().add(const RemoteConfigEvent.started());
   });
@@ -69,6 +101,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('New York'), findsOneWidget);
+    verify(() => mockGetCurrentLocation()).called(1);
     verify(() => mockGetWeather(any())).called(1);
   });
 }

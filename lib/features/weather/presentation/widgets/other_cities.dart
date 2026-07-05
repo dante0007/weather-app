@@ -5,27 +5,32 @@ import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_radii.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/glass_card.dart';
+import 'package:weather_app/core/widgets/glass_card.dart';
+import 'package:weather_app/core/widgets/weather_icon.dart';
 import 'package:weather_app/features/weather/application/bloc/weather_bloc.dart';
 import 'package:weather_app/features/weather/application/bloc/weather_event.dart';
+import 'package:weather_app/features/weather/domain/entities/city_weather.dart';
 import 'package:weather_app/features/weather/domain/entities/geo_city.dart';
-import 'package:weather_app/features/weather/presentation/constants/preset_cities.dart';
 
 class OtherCities extends StatelessWidget {
   const OtherCities({
+    required this.cities,
     this.currentCityName,
+    this.onCitySelected,
     super.key,
   });
 
+  final List<CityWeather> cities;
   final String? currentCityName;
+  final void Function(GeoCity city)? onCitySelected;
 
   @override
   Widget build(BuildContext context) {
-    final cities = WeatherPresetCities.others
-        .where((city) => city.name != currentCityName)
+    final visible = cities
+        .where((entry) => entry.city.name != currentCityName)
         .toList();
 
-    if (cities.isEmpty) {
+    if (visible.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -57,15 +62,14 @@ class OtherCities extends StatelessWidget {
           height: 118,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: cities.length,
+            itemCount: visible.length,
             separatorBuilder: (context, index) =>
                 const SizedBox(width: AppSpacing.gap),
             itemBuilder: (context, index) {
+              final entry = visible[index];
               return _CityCard(
-                city: cities[index],
-                onTap: () => context.read<WeatherBloc>().add(
-                      WeatherEvent.cityChanged(cities[index]),
-                    ),
+                entry: entry,
+                onTap: () => _handleTap(context, entry.city),
               );
             },
           ),
@@ -73,19 +77,30 @@ class OtherCities extends StatelessWidget {
       ],
     );
   }
+
+  void _handleTap(BuildContext context, GeoCity city) {
+    if (onCitySelected != null) {
+      onCitySelected!(city);
+      return;
+    }
+
+    context.read<WeatherBloc>().add(WeatherEvent.cityChanged(city));
+  }
 }
 
 class _CityCard extends StatelessWidget {
   const _CityCard({
-    required this.city,
+    required this.entry,
     required this.onTap,
   });
 
-  final GeoCity city;
+  final CityWeather entry;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final city = entry.city;
+
     return SizedBox(
       width: 108,
       child: GlassCard(
@@ -95,27 +110,28 @@ class _CityCard extends StatelessWidget {
           borderRadius: AppRadii.card,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(city.name, style: AppTypography.subtitle),
               Text(
-                city.country,
+                city.name,
+                style: AppTypography.subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                entry.condition.label,
                 style: AppTypography.caption,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const Spacer(),
+              const SizedBox(height: AppSpacing.gapSm),
               Row(
                 children: [
-                  const Icon(
-                    Icons.location_city_outlined,
-                    size: 28,
-                    color: AppColors.textSecondary,
-                  ),
+                  WeatherIcon(condition: entry.condition, size: 24),
                   const Spacer(),
-                  const Icon(
-                    Icons.chevron_right,
-                    size: 18,
-                    color: AppColors.textMuted,
+                  Text(
+                    '${entry.temperature.round()}°',
+                    style: AppTypography.subtitle,
                   ),
                 ],
               ),

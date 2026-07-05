@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:weather_app/core/theme/app_spacing.dart';
-import 'package:weather_app/design/components/stat_pill.dart';
+import 'package:weather_app/core/widgets/stat_pill.dart';
 import 'package:weather_app/features/remote_config/presentation/widgets/feature_gate.dart';
 import 'package:weather_app/features/remote_config/presentation/widgets/variant_builder.dart';
+import 'package:weather_app/features/weather/domain/entities/city_weather.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 import 'package:weather_app/features/weather/presentation/widgets/air_quality_card.dart';
 import 'package:weather_app/features/weather/presentation/widgets/hourly_forecast_card.dart';
@@ -14,10 +15,12 @@ import 'package:weather_app/features/weather/presentation/widgets/wind_speed_car
 class DashboardWeatherContent extends StatelessWidget {
   const DashboardWeatherContent({
     required this.bundle,
+    required this.otherCities,
     super.key,
   });
 
   final WeatherBundle bundle;
+  final List<CityWeather> otherCities;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +91,10 @@ class DashboardWeatherContent extends StatelessWidget {
               ),
             ),
             if (!detailed)
-              OtherCities(currentCityName: bundle.cityName),
+              OtherCities(
+                cities: otherCities,
+                currentCityName: bundle.cityName,
+              ),
           ],
         );
       },

@@ -69,10 +69,12 @@ Dio createWeatherDio({bool enableLogging = kDebugMode}) {
   if (enableLogging) {
     dio.interceptors.add(
       LogInterceptor(
+        request: true,
         requestHeader: false,
         requestBody: false,
         responseHeader: false,
         responseBody: false,
+        logPrint: (object) => debugPrint('[HTTP] $object'),
       ),
     );
   }

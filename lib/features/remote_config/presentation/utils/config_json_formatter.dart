@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:weather_app/features/remote_config/domain/entities/remote_config.dart';
 
 /// Serializes domain [RemoteConfig] to the same JSON shape as the asset files.
-abstract final class StaticConfigJson {
+abstract final class ConfigJsonFormatter {
   static Map<String, dynamic> toMap(RemoteConfig config) {
     return {
       'configId': config.configId,

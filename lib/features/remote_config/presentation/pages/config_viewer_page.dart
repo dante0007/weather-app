@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/app_background.dart';
-import 'package:weather_app/design/components/json_syntax_block.dart';
-import 'package:weather_app/design/components/segmented_toggle.dart';
+import 'package:weather_app/core/widgets/app_background.dart';
+import 'package:weather_app/core/widgets/json_syntax_block.dart';
+import 'package:weather_app/core/widgets/segmented_toggle.dart';
 import 'package:weather_app/features/remote_config/data/datasources/remote_config_local_source.dart';
 import 'package:weather_app/features/remote_config/data/mappers/config_mapper.dart';
 import 'package:weather_app/features/remote_config/domain/entities/remote_config.dart';
-import 'package:weather_app/static/static_config_json.dart';
+import 'package:weather_app/features/remote_config/presentation/utils/config_json_formatter.dart';
 
 class ConfigViewerPage extends StatefulWidget {
   const ConfigViewerPage({super.key});
@@ -78,7 +78,7 @@ class _ConfigViewerPageState extends State<ConfigViewerPage> {
             if (!_isLoading && _error == null)
               TextButton.icon(
                 onPressed: () async {
-                  final json = StaticConfigJson.prettyPrint(_activeConfig);
+                  final json = ConfigJsonFormatter.prettyPrint(_activeConfig);
                   await copyJsonToClipboard(json);
                   if (!context.mounted) {
                     return;
@@ -113,7 +113,7 @@ class _ConfigViewerPageState extends State<ConfigViewerPage> {
     }
 
     final config = _activeConfig;
-    final json = StaticConfigJson.prettyPrint(config);
+    final json = ConfigJsonFormatter.prettyPrint(config);
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.padding),

@@ -5,7 +5,7 @@ import 'package:weather_app/core/theme/app_colors.dart';
 import 'package:weather_app/core/theme/app_radii.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/glass_card.dart';
+import 'package:weather_app/core/widgets/glass_card.dart';
 
 /// Error state for the live dashboard (design 14, weather fetch).
 class DashboardErrorView extends StatelessWidget {
@@ -80,6 +80,10 @@ class DashboardErrorView extends StatelessWidget {
       cacheFailure: () => 'Could not read cached weather data.',
       configParseFailure: (message) => message,
       unknownFailure: (message) => message,
+      locationPermissionDenied: () =>
+          'Location permission denied. Enable location access in settings.',
+      locationUnavailable: () =>
+          'Could not determine your location. Showing default city.',
     );
   }
 }

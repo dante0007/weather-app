@@ -125,12 +125,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( WeatherBundle bundle)?  loaded,TResult Function( Failure failure)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( WeatherBundle bundle,  List<CityWeather> otherCities,  Failure? locationNotice)?  loaded,TResult Function( Failure failure)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case WeatherInitial() when initial != null:
 return initial();case WeatherLoading() when loading != null:
 return loading();case WeatherLoaded() when loaded != null:
-return loaded(_that.bundle);case WeatherError() when error != null:
+return loaded(_that.bundle,_that.otherCities,_that.locationNotice);case WeatherError() when error != null:
 return error(_that.failure);case _:
   return orElse();
 
@@ -149,12 +149,12 @@ return error(_that.failure);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( WeatherBundle bundle)  loaded,required TResult Function( Failure failure)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( WeatherBundle bundle,  List<CityWeather> otherCities,  Failure? locationNotice)  loaded,required TResult Function( Failure failure)  error,}) {final _that = this;
 switch (_that) {
 case WeatherInitial():
 return initial();case WeatherLoading():
 return loading();case WeatherLoaded():
-return loaded(_that.bundle);case WeatherError():
+return loaded(_that.bundle,_that.otherCities,_that.locationNotice);case WeatherError():
 return error(_that.failure);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -169,12 +169,12 @@ return error(_that.failure);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( WeatherBundle bundle)?  loaded,TResult? Function( Failure failure)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( WeatherBundle bundle,  List<CityWeather> otherCities,  Failure? locationNotice)?  loaded,TResult? Function( Failure failure)?  error,}) {final _that = this;
 switch (_that) {
 case WeatherInitial() when initial != null:
 return initial();case WeatherLoading() when loading != null:
 return loading();case WeatherLoaded() when loaded != null:
-return loaded(_that.bundle);case WeatherError() when error != null:
+return loaded(_that.bundle,_that.otherCities,_that.locationNotice);case WeatherError() when error != null:
 return error(_that.failure);case _:
   return null;
 
@@ -251,10 +251,18 @@ String toString() {
 
 
 class WeatherLoaded implements WeatherState {
-  const WeatherLoaded(this.bundle);
+  const WeatherLoaded(this.bundle, {final  List<CityWeather> otherCities = const [], this.locationNotice}): _otherCities = otherCities;
   
 
  final  WeatherBundle bundle;
+ final  List<CityWeather> _otherCities;
+@JsonKey() List<CityWeather> get otherCities {
+  if (_otherCities is EqualUnmodifiableListView) return _otherCities;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_otherCities);
+}
+
+ final  Failure? locationNotice;
 
 /// Create a copy of WeatherState
 /// with the given fields replaced by the non-null parameter values.
@@ -266,16 +274,16 @@ $WeatherLoadedCopyWith<WeatherLoaded> get copyWith => _$WeatherLoadedCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WeatherLoaded&&(identical(other.bundle, bundle) || other.bundle == bundle));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WeatherLoaded&&(identical(other.bundle, bundle) || other.bundle == bundle)&&const DeepCollectionEquality().equals(other._otherCities, _otherCities)&&(identical(other.locationNotice, locationNotice) || other.locationNotice == locationNotice));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bundle);
+int get hashCode => Object.hash(runtimeType,bundle,const DeepCollectionEquality().hash(_otherCities),locationNotice);
 
 @override
 String toString() {
-  return 'WeatherState.loaded(bundle: $bundle)';
+  return 'WeatherState.loaded(bundle: $bundle, otherCities: $otherCities, locationNotice: $locationNotice)';
 }
 
 
@@ -286,11 +294,11 @@ abstract mixin class $WeatherLoadedCopyWith<$Res> implements $WeatherStateCopyWi
   factory $WeatherLoadedCopyWith(WeatherLoaded value, $Res Function(WeatherLoaded) _then) = _$WeatherLoadedCopyWithImpl;
 @useResult
 $Res call({
- WeatherBundle bundle
+ WeatherBundle bundle, List<CityWeather> otherCities, Failure? locationNotice
 });
 
 
-$WeatherBundleCopyWith<$Res> get bundle;
+$WeatherBundleCopyWith<$Res> get bundle;$FailureCopyWith<$Res>? get locationNotice;
 
 }
 /// @nodoc
@@ -303,10 +311,12 @@ class _$WeatherLoadedCopyWithImpl<$Res>
 
 /// Create a copy of WeatherState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? bundle = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? bundle = null,Object? otherCities = null,Object? locationNotice = freezed,}) {
   return _then(WeatherLoaded(
 null == bundle ? _self.bundle : bundle // ignore: cast_nullable_to_non_nullable
-as WeatherBundle,
+as WeatherBundle,otherCities: null == otherCities ? _self._otherCities : otherCities // ignore: cast_nullable_to_non_nullable
+as List<CityWeather>,locationNotice: freezed == locationNotice ? _self.locationNotice : locationNotice // ignore: cast_nullable_to_non_nullable
+as Failure?,
   ));
 }
 
@@ -318,6 +328,18 @@ $WeatherBundleCopyWith<$Res> get bundle {
   
   return $WeatherBundleCopyWith<$Res>(_self.bundle, (value) {
     return _then(_self.copyWith(bundle: value));
+  });
+}/// Create a copy of WeatherState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FailureCopyWith<$Res>? get locationNotice {
+    if (_self.locationNotice == null) {
+    return null;
+  }
+
+  return $FailureCopyWith<$Res>(_self.locationNotice!, (value) {
+    return _then(_self.copyWith(locationNotice: value));
   });
 }
 }

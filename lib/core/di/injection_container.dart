@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:weather_app/core/location/data/datasources/device_location_source.dart';
+import 'package:weather_app/core/location/data/repositories/location_repository_impl.dart';
+import 'package:weather_app/core/location/domain/repositories/location_repository.dart';
+import 'package:weather_app/core/location/domain/usecases/get_current_location.dart';
 import 'package:weather_app/features/remote_config/application/bloc/remote_config_bloc.dart';
 import 'package:weather_app/features/remote_config/data/datasources/remote_config_local_source.dart';
 import 'package:weather_app/features/remote_config/data/repositories/remote_config_repository_impl.dart';
@@ -16,6 +20,7 @@ import 'package:weather_app/features/weather/data/repositories/weather_repositor
 import 'package:weather_app/features/weather/domain/repositories/weather_repository.dart';
 import 'package:weather_app/features/weather/domain/usecases/get_weather.dart';
 import 'package:weather_app/features/weather/domain/usecases/search_city.dart';
+import 'package:weather_app/features/weather/domain/usecases/top_cities_for_country.dart';
 
 final sl = GetIt.instance;
 
@@ -47,8 +52,17 @@ void configureDependencies() {
       geocodingClient: sl(),
     ),
   );
+  // To run UI without Open-Meteo: register FakeWeatherRepository instead
+  // (see test/fixtures/weather_bundle_fixture.dart).
 
   sl.registerLazySingleton<FlagEvaluator>(() => const FlagEvaluator());
+
+  sl.registerLazySingleton<DeviceLocationSource>(
+    GeolocatorDeviceLocationSource.new,
+  );
+  sl.registerLazySingleton<LocationRepository>(
+    () => LocationRepositoryImpl(sl()),
+  );
 
   sl.registerFactory(() => GetRemoteConfig(sl()));
   sl.registerFactory(() => SwitchConfig(sl()));
@@ -56,6 +70,8 @@ void configureDependencies() {
   sl.registerFactory(() => EvaluateFlag(sl(), sl()));
   sl.registerFactory(() => GetWeather(sl()));
   sl.registerFactory(() => SearchCity(sl()));
+  sl.registerFactory(() => GetCurrentLocation(sl()));
+  sl.registerFactory(() => TopCitiesForCountry(sl()));
 
   sl.registerLazySingleton<RemoteConfigBloc>(
     () => RemoteConfigBloc(
@@ -68,5 +84,7 @@ void configureDependencies() {
     dispose: (bloc) => bloc.close(),
   );
 
-  sl.registerFactory(() => WeatherBloc(sl()));
+  sl.registerFactory(
+    () => WeatherBloc(sl(), sl(), sl()),
+  );
 }

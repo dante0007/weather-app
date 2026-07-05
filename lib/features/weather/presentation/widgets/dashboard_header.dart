@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:weather_app/core/theme/app_spacing.dart';
 import 'package:weather_app/core/theme/app_typography.dart';
-import 'package:weather_app/design/components/weather_icon.dart';
+import 'package:weather_app/core/widgets/weather_icon.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 
 class DashboardHeader extends StatelessWidget {

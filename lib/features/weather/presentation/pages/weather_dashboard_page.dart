@@ -4,15 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:weather_app/core/di/injection_container.dart';
+import 'package:weather_app/core/error/failures.dart';
 import 'package:weather_app/core/router/app_router.dart';
 import 'package:weather_app/core/theme/app_spacing.dart';
-import 'package:weather_app/design/components/app_background.dart';
+import 'package:weather_app/core/widgets/app_background.dart';
 import 'package:weather_app/features/remote_config/presentation/widgets/config_debug_panel.dart';
 import 'package:weather_app/features/remote_config/presentation/widgets/debug_fab.dart';
 import 'package:weather_app/features/remote_config/presentation/widgets/feature_gate.dart';
 import 'package:weather_app/features/weather/application/bloc/weather_bloc.dart';
 import 'package:weather_app/features/weather/application/bloc/weather_event.dart';
 import 'package:weather_app/features/weather/application/bloc/weather_state.dart';
+import 'package:weather_app/features/weather/domain/entities/city_weather.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 import 'package:weather_app/features/weather/presentation/widgets/dashboard_error_view.dart';
 import 'package:weather_app/features/weather/presentation/widgets/dashboard_header.dart';
@@ -30,40 +32,77 @@ class WeatherDashboardPage extends StatefulWidget {
 
 class _WeatherDashboardPageState extends State<WeatherDashboardPage> {
   bool _debugSheetOpen = false;
+  bool _locationNoticeShown = false;
 
   void _viewRawConfig() {
     context.pushNamed(AppRouteNames.configViewer);
+  }
+
+  void _maybeShowLocationNotice(BuildContext context, WeatherLoaded state) {
+    final notice = state.locationNotice;
+    if (notice == null || _locationNoticeShown) {
+      return;
+    }
+
+    _locationNoticeShown = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_locationNoticeMessage(notice)),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    });
+  }
+
+  String _locationNoticeMessage(Failure failure) {
+    return failure.when(
+      serverFailure: (message) => message,
+      networkFailure: () => 'Network unavailable.',
+      cacheFailure: () => 'Could not read cached data.',
+      configParseFailure: (message) => message,
+      unknownFailure: (message) => message,
+      locationPermissionDenied: () =>
+          'Location permission denied. Showing weather for a default city.',
+      locationUnavailable: () =>
+          'Could not determine your location. Showing weather for a default city.',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<WeatherBloc>()
-        ..add(
-          const WeatherEvent.loadRequested(
-            lat: WeatherBloc.defaultLat,
-            lon: WeatherBloc.defaultLon,
-            cityName: WeatherBloc.defaultCityName,
-          ),
-        ),
+        ..add(const WeatherEvent.deviceLocationRequested()),
       child: AppBackground(
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
-              BlocBuilder<WeatherBloc, WeatherState>(
+              BlocConsumer<WeatherBloc, WeatherState>(
+                listener: (context, state) {
+                  if (state case WeatherLoaded loaded) {
+                    _maybeShowLocationNotice(context, loaded);
+                  }
+                },
                 builder: (context, state) {
                   return switch (state) {
                     WeatherInitial() || WeatherLoading() =>
                       const DashboardShimmerView(),
-                    WeatherLoaded(:final bundle) => _LoadedDashboardBody(
+                    WeatherLoaded(:final bundle, :final otherCities) =>
+                      _LoadedDashboardBody(
                         bundle: bundle,
+                        otherCities: otherCities,
                         debugSheetOpen: _debugSheetOpen,
                       ),
                     WeatherError(:final failure) => DashboardErrorView(
                         failure: failure,
                         onRetry: () => context.read<WeatherBloc>().add(
-                              const WeatherEvent.refreshRequested(),
+                              const WeatherEvent.deviceLocationRequested(),
                             ),
                       ),
                   };
@@ -109,10 +148,12 @@ class _WeatherDashboardPageState extends State<WeatherDashboardPage> {
 class _LoadedDashboardBody extends StatelessWidget {
   const _LoadedDashboardBody({
     required this.bundle,
+    required this.otherCities,
     required this.debugSheetOpen,
   });
 
   final WeatherBundle bundle;
+  final List<CityWeather> otherCities;
   final bool debugSheetOpen;
 
   @override
@@ -130,7 +171,10 @@ class _LoadedDashboardBody extends StatelessWidget {
           ),
           DashboardHeader(bundle: bundle),
           const SizedBox(height: AppSpacing.gapLg),
-          DashboardWeatherContent(bundle: bundle),
+          DashboardWeatherContent(
+            bundle: bundle,
+            otherCities: otherCities,
+          ),
           SevenDayForecastLink(bundle: bundle),
           if (kDebugMode && !debugSheetOpen) const SizedBox(height: 72),
         ],

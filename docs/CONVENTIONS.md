@@ -12,7 +12,7 @@ Clean Architecture + Domain-Driven Design, feature-first folder layout.
 
 ```
 lib/
-  core/{di,router,error,usecase,constants,theme}/
+  core/{di,router,error,usecase,constants,theme,widgets,location}/
   features/<feature>/
     domain/
     data/
@@ -28,7 +28,7 @@ lib/
 | **Data** | `data/` | Implements domain. DTOs (`json_serializable`), data sources (Retrofit remote, local sources), mappers (DTO↔entity), repository implementations. |
 | **Application** | `application/` | Blocs and Cubits per feature requirement. States and events via Freezed. Calls use cases; propagates `Either<Failure, T>`. No Flutter widgets here. |
 | **Presentation** | `presentation/` | Flutter UI only — pages and widgets. Consumes Blocs/Cubits from `application/`. |
-| **Core** | `core/` | Cross-cutting: DI (GetIt), router (GoRouter), error types, base use case, constants, theme. |
+| **Core** | `core/` | Cross-cutting: DI (GetIt), router (GoRouter), error types, base use case, constants, theme, shared widgets (`core/widgets/`). |
 
 ### Dependency rule
 
