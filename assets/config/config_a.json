@@ -1,0 +1,37 @@
+{
+  "configId": "config_a",
+  "description": "Conservative rollout",
+  "flags": {
+    "uv_index_card": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 100
+    },
+    "air_quality_card": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 30
+    },
+    "hourly_forecast": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 50
+    },
+    "wind_speed_card": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 0
+    },
+    "severe_weather_alert": {
+      "enabled": true,
+      "killSwitch": true,
+      "rolloutPercentage": 100
+    },
+    "layout_variant": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 100,
+      "variant": "compact"
+    }
+  }
+}

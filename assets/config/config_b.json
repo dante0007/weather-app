@@ -1,0 +1,37 @@
+{
+  "configId": "config_b",
+  "description": "Full features",
+  "flags": {
+    "uv_index_card": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 100
+    },
+    "air_quality_card": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 100
+    },
+    "hourly_forecast": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 100
+    },
+    "wind_speed_card": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 80
+    },
+    "severe_weather_alert": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 100
+    },
+    "layout_variant": {
+      "enabled": true,
+      "killSwitch": false,
+      "rolloutPercentage": 100,
+      "variant": "detailed"
+    }
+  }
+}
