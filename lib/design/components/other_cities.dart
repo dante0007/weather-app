@@ -9,8 +9,9 @@ import 'package:weather_app/design/components/weather_icon.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
 import 'package:weather_app/static/static_mock_data.dart';
 
-class OtherCitiesRow extends StatelessWidget {
-  const OtherCitiesRow({super.key});
+/// Horizontal California / Las Vegas / London row (design dashboard).
+class OtherCities extends StatelessWidget {
+  const OtherCities({super.key});
 
   @override
   Widget build(BuildContext context) {

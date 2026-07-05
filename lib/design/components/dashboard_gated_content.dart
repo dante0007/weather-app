@@ -5,7 +5,7 @@ import 'package:weather_app/design/components/cards/air_quality_card.dart';
 import 'package:weather_app/design/components/cards/hourly_forecast_card.dart';
 import 'package:weather_app/design/components/cards/uv_index_card.dart';
 import 'package:weather_app/design/components/cards/wind_speed_card.dart';
-import 'package:weather_app/design/components/other_cities_row.dart';
+import 'package:weather_app/design/components/other_cities.dart';
 import 'package:weather_app/design/components/stat_pill.dart';
 import 'package:weather_app/design/static_feature_gate.dart';
 import 'package:weather_app/features/weather/domain/entities/weather_bundle.dart';
@@ -93,7 +93,7 @@ class DashboardGatedContent extends StatelessWidget {
             child: HourlyForecastCard(bundle: bundle, detailed: _isDetailed),
           ),
         ),
-        if (showOtherCities) const OtherCitiesRow(),
+        if (showOtherCities) const OtherCities(),
       ],
     );
   }

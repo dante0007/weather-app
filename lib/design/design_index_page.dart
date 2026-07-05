@@ -20,10 +20,39 @@ class DesignIndexPage extends StatelessWidget {
         ),
         body: ListView.separated(
           padding: const EdgeInsets.all(AppSpacing.padding),
-          itemCount: StaticScenario.values.length,
+          itemCount: StaticScenario.values.length + 1,
           separatorBuilder: (context, index) =>
               const SizedBox(height: AppSpacing.gapSm),
           itemBuilder: (context, index) {
+            if (index == StaticScenario.values.length) {
+              return Material(
+                color: Colors.transparent,
+                child: ListTile(
+                  tileColor: Colors.white.withValues(alpha: 0.04),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.08),
+                    ),
+                  ),
+                  title: Text(
+                    'Extra · 7-Day Forecast',
+                    style: AppTypography.subtitle.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => StaticExtraScreens.sevenDayForecast(),
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+
             final scenario = StaticScenario.values[index];
 
             return Material(
